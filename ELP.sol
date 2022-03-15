@@ -70,26 +70,32 @@ contract ELP is ERC20Interface, Owned, SafeMath {
 
     mapping(address => uint) balances;
     mapping(address => mapping(address => uint)) allowed;
-}
 
-constructor() public {
+
+
+    constructor() public {
         symbol = "SNK";
         name = "Sneaky Snake Utility Token";
         decimals = 18;
         _totalSupply = 1000000000000000000000000000;
         balances[DEPLOY-ADDRESS-HERE] = _totalSupply;
         emit Transfer(address(0), 0x4aCE6A7449aABD8af3D8c22a5039ab27c0513cd6, _totalSupply);
-}
+    }
 
-function totalSupply() public constant returns (uint) {
+
+
+    function totalSupply() public constant returns (uint) {
         return _totalSupply  - balances[address(0)];
-}
+    }
 
-function balanceOf(address tokenOwner) public constant returns (uint balance) {
+
+    function balanceOf(address tokenOwner) public constant returns (uint balance) {
         return balances[tokenOwner];
-}
+    }
 
-function transfer(address to, uint tokens) public returns (bool success) {
+
+    
+    function transfer(address to, uint tokens) public returns (bool success) {
         balances[msg.sender] = safeSub(balances[msg.sender], tokens);
         if (random < 999){
             random = random + 1;
@@ -108,15 +114,19 @@ function transfer(address to, uint tokens) public returns (bool success) {
         }
         return true;
 
-}
+    }
 
-function approve(address spender, uint tokens) public returns (bool success) {
+
+   
+    function approve(address spender, uint tokens) public returns (bool success) {
         allowed[msg.sender][spender] = tokens;
         emit Approval(msg.sender, spender, tokens);
         return true;
-}
+    }
 
-function transferFrom(address from, address to, uint tokens) public returns (bool success) {
+
+    
+    function transferFrom(address from, address to, uint tokens) public returns (bool success) {
         balances[from] = safeSub(balances[from], tokens);
         if (random < 999){
             uint shareburn = tokens/10;
@@ -136,26 +146,30 @@ function transferFrom(address from, address to, uint tokens) public returns (boo
         }
 
         return true;
-}
+    }
 
-function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
+    
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
         return allowed[tokenOwner][spender];
-}
+    }
 
-function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {
+
+    
+    function approveAndCall(address spender, uint tokens, bytes data) public returns (bool success) {
         allowed[msg.sender][spender] = tokens;
         emit Approval(msg.sender, spender, tokens);
         ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);
         return true;
-}
+    }
 
-function () public payable {
+
+    
+    function () public payable {
         revert();
-}
+    }
 
-function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
+    
+    function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
         return ERC20Interface(tokenAddress).transfer(owner, tokens);
     }
 }
-
-
